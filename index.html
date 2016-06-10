@@ -37,8 +37,8 @@ API Course, Lesson 1 -->
       <div class="options-box">
         <h1>Find Your New NYC Home</h1>
         <div>
-          <input id="show-listings" type="button">Show Listings</input>
-          <input id="hide-listings" type="button">Hide Listings</input>
+          <input id="show-listings" type="button" value="Show Listings">
+          <input id="hide-listings" type="button" value="Hide Listings">
         </div>
       </div>
 
@@ -52,11 +52,36 @@ API Course, Lesson 1 -->
 
      // TODO: Complete the following function to initialize the map
      function initMap() {
+
+       var styles = [
+        {
+          featureType: "all",
+          stylers: [
+            { saturation: -80 }
+          ]
+        },{
+          featureType: "road.arterial",
+          elementType: "geometry",
+          stylers: [
+            { hue: "#00ffee" },
+            { saturation: 50 }
+          ]
+        },{
+          featureType: "poi.business",
+          elementType: "labels",
+          stylers: [
+            { visibility: "off" }
+          ]
+        }
+      ];
+
        // TODO: use a constructor to create a new map JS object. You can use the coordinates
        // we used, 40.7413549, -73.99802439999996 or your own!
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 40.7413549, lng: -73.99802439999996},
-          zoom: 12
+          zoom: 12,
+          styles: styles,
+          mapTypeControl: false
         });
 
         var largeInfowindow = new google.maps.InfoWindow();
@@ -67,6 +92,10 @@ API Course, Lesson 1 -->
           {title: 'Union Square Open Floor Plan', location: {lat: 40.7347062,  lng:  -73.9895759}}
         ]
 
+        var defaultIcon = makeMarkerIcon('0091ff');
+
+        var highlightedIcon =makeMarkerIcon('FFFF24');
+
         // The following group uses the location array to create an array of markers on initialize
         for (var i = 0; i < locations.length; i++) {
           // Get the position from the location array
@@ -75,6 +104,7 @@ API Course, Lesson 1 -->
 
           var marker = new google.maps.Marker({
             position: position,
+            icon: defaultIcon,
             map: map,
             title: title,
             animation: google.maps.Animation.Drop,
@@ -88,11 +118,33 @@ API Course, Lesson 1 -->
           marker.addListener('click', function(){
             populateInfoWindow(this, largeInfowindow);
           });
+
+          marker.addListener('mouseover', function(){
+            this.setIcon(highlightedIcon);
+          });
+
+          marker.addListener('mouseout', function(){
+            this.setIcon(defaultIcon);
+
+          });
+
         }
 
         document.getElementById('show-listings').addEventListener('click', showListings);
         document.getElementById('hide-listings').addEventListener('click', hideListings);
 
+
+        function makeMarkerIcon(markerColor) {
+          var markerImage = new google.maps.MarkerImage(
+            "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + markerColor,
+            new google.maps.Size(21, 34),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(10, 34),
+            new google.maps.Size(21, 34)
+          );
+
+          return markerImage;
+        }
 
         function populateInfoWindow(marker, infowindow) {
           // Check to make sure this infowindow is not already opened on this marker
