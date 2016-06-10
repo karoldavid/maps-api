@@ -3,9 +3,16 @@ API Course, Lesson 1 -->
 <html>
  <head>
  <!-- styles put here, but you can include a CSS file and reference it instead! -->
-   <style type="text/css">
-     html, body { height: 100%; margin: 0; padding: 0; }
-     #map { height: 100%; }
+   <style>
+     html,
+     body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+     #map {
+      height: 100%;
+    }
    </style>
  </head>
  <body>
@@ -32,8 +39,16 @@ API Course, Lesson 1 -->
           title: 'First Marker!'
         });
 
+        var infowindow = new google.maps.InfoWindow({
+          content: 'Hi there!'
+        });
 
-     }
+        marker.addListener('click', function(){
+          infowindow.open(map, marker);
+        });
+
+      }
+
    </script>
    <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDB2twrWRm7tw2ZtFIWakViLeMz58U9QL8&callback=initMap" async defer></script>
